@@ -11,32 +11,21 @@ from ydata_profiling import ProfileReport
 
 st.title('Expresso Churn Prediction')
 
-# ID du fichier Google Drive (extrait de ton lien)
+# ID du fichier Google Drive
 file_id = "12_KUHr5NlHO_6bN5SylpkxWc-JvpJNWe"
-
-# Construction de l'URL de téléchargement
 download_url = f"https://drive.google.com/uc?id={file_id}"
 
-# Charger le dataset depuis Google Drive avec gestion des erreurs
+# Charger le dataset
 try:
     df = pd.read_csv(download_url)
     st.write("Dataset chargé avec succès depuis Google Drive !")
 except Exception as e:
     st.error(f"Erreur lors du chargement du dataset depuis Google Drive : {e}")
-    st.stop()  # Arrête l'exécution si le chargement échoue
+    st.stop()
 
-# Exploration des données avec ydata-profiling
+# Exploration des données
 st.subheader("Exploration des données")
-if st.checkbox("Générer un rapport de profilage"):
-    try:
-        profile = ProfileReport(df)
-        st.components.v1.html(profile.to_html(), height=800, scrolling=True)
-    except Exception as e:
-        st.error(f"Erreur lors de la génération du rapport de profilage : {e}")
-
-    # Exploration des données avec ydata-profiling
-st.subheader("Exploration des données")
-if st.checkbox("Générer un rapport de profilage"):
+if st.checkbox("Générer un rapport de profilage", key="profiling_checkbox"): # Clé ajoutée ici
     try:
         profile = ProfileReport(df)
         st.components.v1.html(profile.to_html(), height=800, scrolling=True)
