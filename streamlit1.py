@@ -11,22 +11,28 @@ from ydata_profiling import ProfileReport
 
 st.title('Expresso Churn Prediction')
 
-# Chemin d'accès à ton fichier CSV
-chemin_fichier = "C:\\Users\\Admin.local\\Desktop\\OSL 2024\\GoMyCode\\CHECKPOINT STREAMLIT 1\\Expresso_churn_dataset.csv"
+# ID du fichier Google Drive (extrait de ton lien)
+file_id = "12_KUHr5NlHO_6bN5SylpkxWc-JvpJNWe"
 
-# Charger le dataset avec gestion des erreurs
+# Construction de l'URL de téléchargement
+download_url = f"https://drive.google.com/uc?id={file_id}"
+
+# Charger le dataset depuis Google Drive avec gestion des erreurs
 try:
-    df = pd.read_csv(chemin_fichier)
-    st.write("Dataset chargé avec succès !")
-except FileNotFoundError:
-    st.error(f"Fichier CSV non trouvé à l'emplacement : {chemin_fichier}. Veuillez vérifier le chemin.")
-    st.stop()
-except pd.errors.ParserError:
-    st.error(f"Erreur lors de la lecture du fichier CSV. Veuillez vérifier le format du fichier.")
-    st.stop()
+    df = pd.read_csv(download_url)
+    st.write("Dataset chargé avec succès depuis Google Drive !")
 except Exception as e:
-    st.error(f"Une erreur inattendue s'est produite : {e}")
-    st.stop()
+    st.error(f"Erreur lors du chargement du dataset depuis Google Drive : {e}")
+    st.stop()  # Arrête l'exécution si le chargement échoue
+
+# Exploration des données avec ydata-profiling
+st.subheader("Exploration des données")
+if st.checkbox("Générer un rapport de profilage"):
+    try:
+        profile = ProfileReport(df)
+        st.components.v1.html(profile.to_html(), height=800, scrolling=True)
+    except Exception as e:
+        st.error(f"Erreur lors de la génération du rapport de profilage : {e}")
 
     # Exploration des données avec ydata-profiling
 st.subheader("Exploration des données")
